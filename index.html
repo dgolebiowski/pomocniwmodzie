@@ -63,6 +63,107 @@
       gap: 40px;
       list-style: none;
     }
+
+    /* MOBILE NAV TOGGLE */
+    .nav-toggle {
+      display: none;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 10px;
+      width: 44px;
+      height: 44px;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 5px;
+      z-index: 110;
+      position: relative;
+    }
+    .nav-toggle span {
+      display: block;
+      width: 22px;
+      height: 1px;
+      background: var(--white);
+      transition: transform 0.35s ease, opacity 0.25s ease;
+    }
+    .nav-toggle.open span:nth-child(1) {
+      transform: translateY(6px) rotate(45deg);
+    }
+    .nav-toggle.open span:nth-child(2) {
+      opacity: 0;
+    }
+    .nav-toggle.open span:nth-child(3) {
+      transform: translateY(-6px) rotate(-45deg);
+    }
+
+    /* MOBILE NAV PANEL */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(8,6,4,0.98);
+      z-index: 105;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+    .mobile-nav.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .mobile-nav::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 30%, rgba(160,18,57,0.18), transparent 70%),
+        radial-gradient(ellipse 60% 50% at 50% 80%, rgba(160,18,57,0.12), transparent 70%);
+      pointer-events: none;
+    }
+    .mobile-nav ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 28px;
+      padding: 0;
+      margin: 0;
+      position: relative;
+      z-index: 1;
+    }
+    .mobile-nav a {
+      font-family: var(--ff-display);
+      font-size: 28px;
+      font-weight: 300;
+      color: var(--white);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      transition: color 0.3s;
+    }
+    .mobile-nav a:hover { color: var(--gold); }
+    .mobile-nav .mn-divider {
+      width: 40px;
+      height: 1px;
+      background: var(--gold);
+      opacity: 0.6;
+    }
+    .mobile-nav .mn-tagline {
+      position: absolute;
+      bottom: 48px;
+      left: 0; right: 0;
+      text-align: center;
+      font-family: var(--ff-display);
+      font-style: italic;
+      font-size: 14px;
+      color: var(--gold-lt);
+      letter-spacing: 0.06em;
+      opacity: 0.8;
+    }
     .nav-links a {
       font-family: var(--ff-body);
       font-size: 11px;
@@ -673,6 +774,8 @@
     @media (max-width: 768px) {
       nav { padding: 20px 24px; }
       .nav-links { display: none; }
+      .nav-toggle { display: flex; }
+      .mobile-nav { display: flex; }
       section { padding: 80px 24px; }
       .section-inner { padding: 0 24px; }
       #about .about-grid { grid-template-columns: 1fr; gap: 40px; }
@@ -1275,7 +1378,28 @@
     <li><a href="#partners">Partnerzy</a></li>
     <li><a href="#contact">Kontakt</a></li>
   </ul>
+  <button class="nav-toggle" id="nav-toggle" aria-label="Menu" aria-expanded="false">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
 </nav>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav" id="mobile-nav">
+  <ul>
+    <li><a href="#about" data-mn-link>O wydarzeniu</a></li>
+    <li><span class="mn-divider"></span></li>
+    <li><a href="#editions" data-mn-link>Edycje</a></li>
+    <li><span class="mn-divider"></span></li>
+    <li><a href="#tickets" data-mn-link>Bilety</a></li>
+    <li><span class="mn-divider"></span></li>
+    <li><a href="#partners" data-mn-link>Partnerzy</a></li>
+    <li><span class="mn-divider"></span></li>
+    <li><a href="#contact" data-mn-link>Kontakt</a></li>
+  </ul>
+  <div class="mn-tagline">Moda, która zmienia świat</div>
+</div>
 
 <!-- HERO -->
 <div id="hero">
@@ -1810,6 +1934,25 @@ ReactDOM.createRoot(document.getElementById('tweaks-root')).render(<App />);
 window.addEventListener('scroll', function() {
   document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
 });
+
+// MOBILE NAV TOGGLE
+(function() {
+  const toggle = document.getElementById('nav-toggle');
+  const panel = document.getElementById('mobile-nav');
+  if (!toggle || !panel) return;
+  function setOpen(open) {
+    toggle.classList.toggle('open', open);
+    panel.classList.toggle('open', open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    document.body.style.overflow = open ? 'hidden' : '';
+  }
+  toggle.addEventListener('click', function() {
+    setOpen(!panel.classList.contains('open'));
+  });
+  panel.querySelectorAll('[data-mn-link]').forEach(a => {
+    a.addEventListener('click', () => setOpen(false));
+  });
+})();
 
 // NOTIFY
 document.getElementById('notify-btn').addEventListener('click', function() {
