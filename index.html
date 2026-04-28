@@ -28,14 +28,19 @@
       --ff-body:    'Montserrat', Helvetica, sans-serif;
     }
 
-    html { scroll-behavior: smooth; }
+    html {
+      scroll-behavior: smooth;
+      overflow-x: clip;
+      max-width: 100%;
+    }
 
     body {
       background: var(--black);
       color: var(--white);
       font-family: var(--ff-body);
       font-weight: 300;
-      overflow-x: hidden;
+      overflow-x: clip;
+      max-width: 100%;
     }
 
     /* NAV */
@@ -778,12 +783,27 @@
       .mobile-nav { display: flex; }
       section { padding: 80px 24px; }
       .section-inner { padding: 0 24px; }
-      #about .about-grid { grid-template-columns: 1fr; gap: 40px; }
+      #hero { padding: 120px 24px 80px; }
+      #about .about-grid { grid-template-columns: 1fr; gap: 40px; min-width: 0; }
       .editions-grid { grid-template-columns: 1fr; }
-      .contact-grid { grid-template-columns: 1fr; gap: 40px; }
-      .partners-grid { grid-template-columns: repeat(2, 1fr); }
-      footer { flex-direction: column; gap: 20px; text-align: center; }
-      .countdown-unit { padding: 0 20px; }
+      .contact-grid { grid-template-columns: 1fr; gap: 40px; min-width: 0; }
+      .contact-grid > * { min-width: 0; }
+      .contact-value { font-size: 22px; word-break: break-word; overflow-wrap: anywhere; }
+      .partners-grid { grid-template-columns: repeat(2, 1fr); gap: 24px 20px; }
+      footer { flex-direction: column; gap: 20px; text-align: center; padding: 40px 24px; }
+
+      /* Countdown - zmniejszamy żeby zmieściło się w viewport */
+      .countdown-unit { padding: 0 12px; }
+      .countdown-number { font-size: clamp(36px, 11vw, 56px); }
+      .countdown-label { font-size: 9px; letter-spacing: 0.2em; }
+
+      /* Editions stats - długie liczby mogą wystawać */
+      .ed-stats { gap: 20px; flex-wrap: wrap; }
+      .ed-info { padding: 28px 24px 32px; }
+
+      /* Ticket form - input + button mogą się nie zmieścić na wąskim ekranie */
+      .ticket-notify { flex-direction: column; max-width: 360px; gap: 8px; }
+      .ticket-input { border-right: 1px solid var(--gold-dk); }
     }
 
     /* EDITIONS REACT */
@@ -1816,7 +1836,7 @@ function EditionsSection() {
               <div className="ed-info">
                 <div className="ed-info-left">
                   <div className="ed-venue-tag">{ed.edition} · {ed.venue}</div>
-                  <div className="ed-name">poMocni w Modzie</div>
+                  <div className="ed-name">poMocni w Modzie {ed.year}</div>
                   <div className="ed-cause" dangerouslySetInnerHTML={{__html: ed.cause}}></div>
                   <div className="ed-description">{ed.description}</div>
                   <div className="ed-stats">
