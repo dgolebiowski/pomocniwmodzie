@@ -1,0 +1,1595 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>poMocni w Modzie by Plesiak</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:    oklch(0.07 0.01 60);
+      --black-2:  oklch(0.11 0.01 60);
+      --black-3:  oklch(0.15 0.01 60);
+      --gold:     #a01239;
+      --gold-lt:  #c4275a;
+      --gold-dk:  #6e0d27;
+      --white:    oklch(0.97 0.01 85);
+      --muted:    oklch(0.60 0.02 80);
+      --ff-display: 'Cormorant Garamond', Georgia, serif;
+      --ff-body:    'Montserrat', Helvetica, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: var(--ff-body);
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 60px;
+      background: linear-gradient(to bottom, rgba(10,8,6,0.95), transparent);
+      transition: background 0.4s;
+    }
+    nav.scrolled {
+      background: rgba(10,8,6,0.97);
+      border-bottom: 1px solid rgba(180,140,60,0.15);
+    }
+    .nav-logo img {
+      height: 36px;
+      filter: brightness(1);
+    }
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: var(--ff-body);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--white);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+
+    /* GOLD LINE */
+    .gold-line {
+      width: 60px;
+      height: 1px;
+      background: var(--gold);
+      margin: 0 auto;
+    }
+    .gold-line-left {
+      width: 40px;
+      height: 1px;
+      background: linear-gradient(to right, var(--gold), transparent);
+    }
+
+    /* HERO */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      padding: 120px 40px 80px;
+      text-align: center;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('uploads/Dominika_Scheibinger_-5971.jpg');
+      background-size: cover;
+      background-position: center 35%;
+    }
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(8,6,4,0.55) 0%, rgba(8,6,4,0.72) 60%, rgba(8,6,4,0.97) 100%),
+        radial-gradient(ellipse 70% 60% at 50% 40%, rgba(8,6,4,0.25), transparent 70%);
+    }
+    .hero-grain {
+      position: absolute;
+      inset: 0;
+      opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+    }
+    .hero-ornament-top {
+      position: absolute;
+      top: 110px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1px;
+      height: 60px;
+      background: linear-gradient(to bottom, transparent, var(--gold-dk));
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 900px;
+    }
+    .hero-eyebrow {
+      font-family: var(--ff-body);
+      font-size: 10px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--white);
+      margin-bottom: 32px;
+    }
+    .hero-logo {
+      width: min(520px, 80vw);
+      margin: 0 auto 20px;
+      display: block;
+    }
+    .hero-subtitle {
+      font-family: var(--ff-display);
+      font-size: clamp(22px, 3vw, 36px);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--gold-lt);
+      letter-spacing: 0.06em;
+      margin-bottom: 16px;
+    }
+    .hero-tagline {
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--white);
+      margin-bottom: 64px;
+    }
+
+    /* COUNTDOWN */
+    .countdown-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      justify-content: center;
+      margin-bottom: 56px;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.8);
+      filter: drop-shadow(0 4px 24px rgba(0,0,0,0.7));
+    }
+    .countdown-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 36px;
+      position: relative;
+    }
+    .countdown-unit + .countdown-unit::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-60%);
+      width: 1px;
+      height: 40px;
+      background: var(--gold-dk);
+      opacity: 0.5;
+    }
+    .countdown-number {
+      font-family: var(--ff-display);
+      font-size: clamp(52px, 7vw, 88px);
+      font-weight: 300;
+      line-height: 1;
+      color: var(--white);
+      letter-spacing: -0.02em;
+    }
+    .countdown-label {
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--white);
+      margin-top: 8px;
+      font-weight: 500;
+      opacity: 0.85;
+    }
+
+    .hero-date {
+      font-size: 13px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--white);
+      margin-bottom: 48px;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.8);
+      opacity: 0.9;
+    }
+    .hero-date span { color: var(--white); }
+
+    .btn-primary {
+      display: inline-block;
+      border: 1px solid var(--white);
+      color: var(--white);
+      font-family: var(--ff-body);
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      padding: 18px 48px;
+      text-decoration: none;
+      cursor: pointer;
+      background: transparent;
+      transition: background 0.3s, color 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--white);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.35s ease;
+      z-index: -1;
+    }
+    .btn-primary:hover { color: var(--black); }
+    .btn-primary:hover::before { transform: scaleX(1); }
+
+    /* SCROLL INDICATOR */
+    .scroll-hint {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 9px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      animation: bounce 2s ease-in-out infinite;
+    }
+    .scroll-hint svg { opacity: 0.5; }
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(6px); }
+    }
+
+    /* SECTIONS */
+    section {
+      padding: 120px 60px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    section.full-bleed {
+      max-width: none;
+      padding: 120px 0;
+    }
+    .section-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 60px;
+    }
+
+    .section-tag {
+      font-size: 9px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 500;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .section-tag::before {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    .section-title {
+      font-family: var(--ff-display);
+      font-size: clamp(38px, 5vw, 64px);
+      font-weight: 300;
+      line-height: 1.1;
+      letter-spacing: 0.02em;
+      margin-bottom: 32px;
+    }
+    .section-title em {
+      font-style: italic;
+      color: var(--gold-lt);
+    }
+
+    /* ABOUT */
+    #about .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+      margin-top: 64px;
+    }
+    .about-text {
+      font-size: 15px;
+      line-height: 1.9;
+      color: var(--muted);
+      font-weight: 300;
+    }
+    .about-text p + p { margin-top: 20px; }
+    .about-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      padding-top: 8px;
+    }
+    .stat-item {
+      border-left: 1px solid var(--gold-dk);
+      padding-left: 28px;
+    }
+    .stat-number {
+      font-family: var(--ff-display);
+      font-size: 52px;
+      font-weight: 300;
+      line-height: 1;
+      color: var(--white);
+    }
+    .stat-label {
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-top: 8px;
+    }
+
+    /* EDITIONS */
+    #editions {
+      background: var(--black-2);
+    }
+    .editions-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      margin-top: 64px;
+    }
+    .edition-card {
+      position: relative;
+      aspect-ratio: 4/5;
+      overflow: hidden;
+      cursor: pointer;
+      background: var(--black-3);
+    }
+    .edition-card:hover .edition-overlay { opacity: 1; }
+    .edition-card:hover .edition-img-placeholder { transform: scale(1.04); }
+    .edition-img-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.7s ease;
+      position: relative;
+    }
+    .edition-img-placeholder svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .edition-placeholder-label {
+      position: relative;
+      z-index: 1;
+      font-family: monospace;
+      font-size: 11px;
+      color: var(--muted);
+      opacity: 0.5;
+      text-align: center;
+      padding: 20px;
+    }
+    .edition-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(10,8,6,0.95) 0%, rgba(10,8,6,0.4) 60%, transparent 100%);
+      opacity: 0.7;
+      transition: opacity 0.4s;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 40px;
+    }
+    .edition-year {
+      font-family: var(--ff-display);
+      font-size: 72px;
+      font-weight: 300;
+      line-height: 1;
+      color: var(--gold);
+      opacity: 0.3;
+      position: absolute;
+      top: 24px;
+      right: 28px;
+    }
+    .edition-venue {
+      font-size: 9px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+    .edition-name {
+      font-family: var(--ff-display);
+      font-size: 28px;
+      font-weight: 400;
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+    .edition-cause {
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    /* TICKETS */
+    #tickets {
+      background: var(--black);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    #tickets .ticket-bg {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 80% at 50% 50%, oklch(0.20 0.08 80 / 0.18), transparent 70%);
+      pointer-events: none;
+    }
+    #tickets .section-inner {
+      position: relative;
+      z-index: 1;
+    }
+    #tickets .section-tag {
+      justify-content: center;
+    }
+    #tickets .section-tag::before { display: none; }
+    .ticket-ornament {
+      width: 120px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+      margin: 0 auto 20px;
+    }
+    .ticket-soon {
+      font-family: var(--ff-display);
+      font-size: clamp(48px, 7vw, 96px);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--white);
+      letter-spacing: 0.04em;
+      margin: 32px 0 20px;
+    }
+    .ticket-info {
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 56px;
+    }
+    .ticket-notify {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .ticket-input {
+      flex: 1;
+      background: transparent;
+      border: 1px solid var(--gold-dk);
+      border-right: none;
+      padding: 16px 24px;
+      color: var(--white);
+      font-family: var(--ff-body);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      outline: none;
+    }
+    .ticket-input::placeholder { color: var(--muted); }
+    .ticket-input:focus { border-color: var(--gold); }
+    .ticket-btn {
+      background: var(--gold);
+      border: 1px solid var(--gold);
+      color: var(--black);
+      font-family: var(--ff-body);
+      font-size: 9px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      padding: 16px 28px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.3s;
+      white-space: nowrap;
+    }
+    .ticket-btn:hover { background: var(--gold-lt); }
+
+    /* PARTNERS */
+    #partners {
+      border-top: 1px solid oklch(0.18 0.02 80);
+    }
+    .partners-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 40px 60px;
+      margin-top: 64px;
+      align-items: center;
+    }
+    .partner-slot {
+      aspect-ratio: 3/1.5;
+      border: 1px solid oklch(0.18 0.02 80);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: monospace;
+      font-size: 10px;
+      color: oklch(0.28 0.02 80);
+      letter-spacing: 0.08em;
+      text-align: center;
+      transition: border-color 0.3s;
+    }
+    .partner-slot:hover { border-color: var(--gold-dk); }
+    .partners-note {
+      margin-top: 40px;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+    .partners-note a {
+      color: var(--gold);
+      text-decoration: none;
+      border-bottom: 1px solid var(--gold-dk);
+    }
+
+    /* CONTACT */
+    #contact {
+      background: var(--black-2);
+    }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 100px;
+      margin-top: 64px;
+    }
+    .contact-item {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .contact-label {
+      font-size: 9px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 500;
+    }
+    .contact-value {
+      font-family: var(--ff-display);
+      font-size: 28px;
+      font-weight: 300;
+      color: var(--white);
+    }
+    .contact-value a {
+      color: inherit;
+      text-decoration: none;
+      border-bottom: 1px solid var(--gold-dk);
+      transition: border-color 0.3s;
+    }
+    .contact-value a:hover { border-color: var(--gold); }
+    .contact-desc {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    .social-links {
+      display: flex;
+      gap: 24px;
+      margin-top: 8px;
+    }
+    .social-link {
+      font-size: 9px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .social-link::before {
+      content: '';
+      width: 20px;
+      height: 1px;
+      background: currentColor;
+    }
+    .social-link:hover { color: var(--gold); }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid oklch(0.15 0.01 80);
+      padding: 40px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-logo img { height: 28px; opacity: 0.5; }
+    .footer-copy {
+      font-size: 10px;
+      color: oklch(0.32 0.02 80);
+      letter-spacing: 0.1em;
+    }
+    .footer-tagline {
+      font-family: var(--ff-display);
+      font-size: 13px;
+      font-style: italic;
+      color: oklch(0.35 0.03 80);
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up {
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards;
+    }
+    .fade-up-1 { animation-delay: 0.1s; }
+    .fade-up-2 { animation-delay: 0.25s; }
+    .fade-up-3 { animation-delay: 0.4s; }
+    .fade-up-4 { animation-delay: 0.55s; }
+    .fade-up-5 { animation-delay: 0.7s; }
+    .fade-up-6 { animation-delay: 0.85s; }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      nav { padding: 20px 24px; }
+      .nav-links { display: none; }
+      section { padding: 80px 24px; }
+      .section-inner { padding: 0 24px; }
+      #about .about-grid { grid-template-columns: 1fr; gap: 40px; }
+      .editions-grid { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+      .partners-grid { grid-template-columns: repeat(2, 1fr); }
+      footer { flex-direction: column; gap: 20px; text-align: center; }
+      .countdown-unit { padding: 0 20px; }
+    }
+
+    /* EDITIONS REACT */
+    #editions-root { background: var(--black-2); }
+
+    .editions-section {
+      padding: 120px 0;
+    }
+    .editions-header {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 60px;
+      margin-bottom: 64px;
+    }
+
+    .editions-cards {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 60px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+    }
+
+    .ed-card {
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      background: var(--black-3);
+      group: true;
+    }
+    .ed-cover {
+      aspect-ratio: 4/3;
+      position: relative;
+      overflow: hidden;
+    }
+    .ed-cover-placeholder {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+    .ed-cover-placeholder svg {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+    }
+    .ed-cover-label {
+      position: relative; z-index: 1;
+      font-family: monospace; font-size: 11px;
+      color: var(--muted); opacity: 0.4;
+      text-align: center; padding: 20px;
+    }
+    .ed-cover-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(8,6,4,0.95) 0%, rgba(8,6,4,0.3) 60%, transparent 100%);
+      transition: opacity 0.4s;
+    }
+    .ed-card:hover .ed-cover-overlay { opacity: 0.85; }
+    .ed-card:hover .ed-cover-placeholder { transform: scale(1.03); transition: transform 0.7s ease; }
+
+    .ed-info {
+      padding: 32px 36px 36px;
+      background: var(--black-3);
+      border-top: 1px solid oklch(0.18 0.01 80);
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      align-items: flex-start;
+    }
+    .ed-info-left {}
+    .ed-year-badge {
+      font-family: var(--ff-display);
+      font-size: 56px;
+      font-weight: 300;
+      line-height: 1;
+      color: var(--gold);
+      opacity: 0.25;
+      position: absolute;
+      top: 20px; right: 24px;
+      pointer-events: none;
+    }
+    .ed-venue-tag {
+      font-size: 9px; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--gold);
+      font-weight: 500; margin-bottom: 8px;
+    }
+    .ed-name {
+      font-family: var(--ff-display);
+      font-size: 22px; font-weight: 400;
+      color: var(--white); margin-bottom: 4px;
+    }
+    .ed-cause {
+      font-size: 11px; color: var(--muted); letter-spacing: 0.04em;
+    }
+    .ed-description {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.75;
+      margin-top: 12px;
+      max-width: 420px;
+    }
+    .ed-stats {
+      display: flex;
+      gap: 32px;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid oklch(0.18 0.01 80);
+    }
+    .ed-stat {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .ed-stat-number {
+      font-family: var(--ff-display);
+      font-size: 26px;
+      font-weight: 300;
+      color: var(--white);
+      line-height: 1;
+    }
+    .ed-stat-label {
+      font-size: 8px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 500;
+    }
+
+    .ed-gallery-btn {
+      background: transparent;
+      border: 1px solid var(--gold-dk);
+      color: var(--gold);
+      font-family: var(--ff-body);
+      font-size: 9px; letter-spacing: 0.25em;
+      text-transform: uppercase;
+      padding: 12px 20px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.3s, color 0.3s, border-color 0.3s;
+      flex-shrink: 0;
+    }
+    .ed-gallery-btn:hover {
+      background: var(--gold);
+      color: var(--black);
+      border-color: var(--gold);
+    }
+
+    /* GALLERY MODAL */
+    .gallery-modal-backdrop {
+      position: fixed; inset: 0;
+      background: rgba(5,4,3,0.97);
+      z-index: 500;
+      display: flex; flex-direction: column;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      pointer-events: none;
+    }
+    .gallery-modal-backdrop.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .gallery-modal-header {
+      padding: 28px 48px;
+      display: flex; align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid oklch(0.15 0.01 80);
+      flex-shrink: 0;
+    }
+    .gallery-modal-title {
+      display: flex; align-items: baseline; gap: 20px;
+    }
+    .gallery-modal-year {
+      font-family: var(--ff-display);
+      font-size: 40px; font-weight: 300;
+      color: var(--gold); line-height: 1;
+    }
+    .gallery-modal-meta {
+      display: flex; flex-direction: column; gap: 3px;
+    }
+    .gallery-modal-venue {
+      font-size: 9px; letter-spacing: 0.28em;
+      text-transform: uppercase; color: var(--gold);
+    }
+    .gallery-modal-cause {
+      font-size: 12px; color: var(--muted);
+    }
+    .gallery-close-btn {
+      background: none; border: none;
+      color: var(--muted); font-size: 28px;
+      cursor: pointer; line-height: 1;
+      padding: 8px; transition: color 0.2s;
+      font-family: var(--ff-body); font-weight: 300;
+    }
+    .gallery-close-btn:hover { color: var(--white); }
+
+    /* STRIP CAROUSEL */
+    .gallery-strip-wrap {
+      flex-shrink: 0;
+      padding: 28px 48px 20px;
+      border-bottom: 1px solid oklch(0.13 0.01 80);
+    }
+    .gallery-strip {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      scrollbar-color: var(--gold-dk) transparent;
+      cursor: grab;
+      user-select: none;
+    }
+    .gallery-strip:active { cursor: grabbing; }
+    .gallery-strip::-webkit-scrollbar { height: 3px; }
+    .gallery-strip::-webkit-scrollbar-track { background: transparent; }
+    .gallery-strip::-webkit-scrollbar-thumb { background: var(--gold-dk); border-radius: 2px; }
+
+    .strip-thumb {
+      flex-shrink: 0;
+      scroll-snap-align: start;
+      width: 140px;
+      height: 95px;
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+      border: 2px solid transparent;
+      transition: border-color 0.2s;
+    }
+    .strip-thumb.active { border-color: var(--gold); }
+    .strip-thumb:hover { border-color: var(--gold-dk); }
+    .strip-thumb-inner {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+    .strip-thumb-inner svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .strip-thumb-label {
+      position: relative; z-index: 1;
+      font-family: monospace; font-size: 9px;
+      color: var(--muted); opacity: 0.5;
+      text-align: center; padding: 6px;
+    }
+
+    /* LIGHTBOX */
+    .gallery-lightbox {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .lightbox-main {
+      max-width: 900px;
+      max-height: 100%;
+      width: 100%;
+      padding: 32px 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+    .lightbox-img {
+      width: 100%;
+      aspect-ratio: 3/2;
+      position: relative;
+      overflow: hidden;
+      background: var(--black-3);
+    }
+    .lightbox-img svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .lightbox-img-label {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: monospace; font-size: 12px;
+      color: var(--muted); opacity: 0.4;
+    }
+    .lightbox-counter {
+      font-size: 10px; letter-spacing: 0.25em;
+      color: var(--muted); text-transform: uppercase;
+    }
+    .lightbox-arrow {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      background: none; border: 1px solid var(--gold-dk);
+      color: var(--gold); cursor: pointer;
+      width: 48px; height: 48px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; transition: background 0.2s, border-color 0.2s;
+    }
+    .lightbox-arrow:hover { background: oklch(0.15 0.02 80); border-color: var(--gold); }
+    .lightbox-arrow.prev { left: 24px; }
+    .lightbox-arrow.next { right: 24px; }
+
+    /* GRID VIEW TAB */
+    .gallery-view-toggle {
+      padding: 0 48px 16px;
+      display: flex; gap: 24px; align-items: center;
+      flex-shrink: 0;
+    }
+    .view-btn {
+      font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase;
+      background: none; border: none; color: var(--muted);
+      cursor: pointer; padding: 6px 0;
+      border-bottom: 1px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+      font-family: var(--ff-body);
+    }
+    .view-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+    .gallery-grid-view {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 48px 40px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+      align-content: start;
+    }
+    .gallery-grid-view::-webkit-scrollbar { width: 4px; }
+    .gallery-grid-view::-webkit-scrollbar-thumb { background: var(--gold-dk); }
+    .grid-photo {
+      aspect-ratio: 1;
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+      background: var(--black-3);
+    }
+    .grid-photo:nth-child(5n+1) { aspect-ratio: 4/5; }
+    .grid-photo:nth-child(7n+3) { aspect-ratio: 3/4; }
+    .grid-photo svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .grid-photo-label {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: monospace; font-size: 9px;
+      color: var(--muted); opacity: 0.35;
+    }
+    .grid-photo:hover .grid-photo-overlay { opacity: 1; }
+    .grid-photo-overlay {
+      position: absolute; inset: 0;
+      background: rgba(180,140,60,0.12);
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+
+    @media (max-width: 768px) {
+      .editions-cards { grid-template-columns: 1fr; padding: 0 24px; }
+      .editions-header { padding: 0 24px; }
+      .gallery-modal-header { padding: 20px 24px; }
+      .gallery-strip-wrap { padding: 20px 24px 16px; }
+      .lightbox-main { padding: 20px 60px; }
+      .gallery-grid-view { grid-template-columns: repeat(2, 1fr); padding: 16px 24px; }
+      .gallery-view-toggle { padding: 0 24px 12px; }
+    }
+
+    /* NOTIFY TOAST */
+    .toast {
+      position: fixed;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--gold);
+      color: var(--black);
+      font-family: var(--ff-body);
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 14px 32px;
+      font-weight: 600;
+      opacity: 0;
+      transition: opacity 0.4s;
+      pointer-events: none;
+      z-index: 999;
+      white-space: nowrap;
+    }
+    .toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">
+    <img src="uploads/logo-1777359579464.png" alt="poMocni w Modzie" />
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about">O wydarzeniu</a></li>
+    <li><a href="#editions">Edycje</a></li>
+    <li><a href="#tickets">Bilety</a></li>
+    <li><a href="#partners">Partnerzy</a></li>
+    <li><a href="#contact">Kontakt</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grain"></div>
+  <div class="hero-ornament-top"></div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow fade-up fade-up-1">Gala Charytatywno-Modowa · Łódź</p>
+    <img src="uploads/logo-1777359579464.png" alt="poMocni w Modzie by Plesiak" class="hero-logo fade-up fade-up-2" />
+    <p class="hero-tagline fade-up fade-up-3">Moda, która zmienia świat</p>
+
+    <div class="countdown-wrapper fade-up fade-up-4" id="countdown">
+      <div class="countdown-unit">
+        <span class="countdown-number" id="cd-days">—</span>
+        <span class="countdown-label">Dni</span>
+      </div>
+      <div class="countdown-unit">
+        <span class="countdown-number" id="cd-hours">—</span>
+        <span class="countdown-label">Godzin</span>
+      </div>
+      <div class="countdown-unit">
+        <span class="countdown-number" id="cd-mins">—</span>
+        <span class="countdown-label">Minut</span>
+      </div>
+      <div class="countdown-unit">
+        <span class="countdown-number" id="cd-secs">—</span>
+        <span class="countdown-label">Sekund</span>
+      </div>
+    </div>
+
+    <p class="hero-date fade-up fade-up-5"><span>14 MAJA 2027</span> · Łódź</p>
+    <a href="#tickets" class="btn-primary fade-up fade-up-6">Powiadom mnie o biletach</a>
+  </div>
+
+  <div class="scroll-hint">
+    <svg width="16" height="24" viewBox="0 0 16 24" fill="none">
+      <rect x="1" y="1" width="14" height="22" rx="7" stroke="currentColor" stroke-width="1"/>
+      <rect x="7" y="5" width="2" height="5" rx="1" fill="currentColor"/>
+    </svg>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-tag">O wydarzeniu</div>
+  <h2 class="section-title">Gdzie <em>moda spotyka<br/>się z sercem</em></h2>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>poMocni w Modzie to wyjątkowa gala charytatywno-modowa, która łączy świat haute couture z realną pomocą potrzebującym. Każdy strój, każdy krok na wybiegu — to krok w stronę zmiany.</p>
+      <p>Wydarzenie stworzone przez Plesiak to przestrzeń, w której elegancja służy wyższemu celowi. Nasi goście, projektanci i partnerzy razem tworzą coś więcej niż tylko galę — tworzą ruch.</p>
+      <p>Trzecia edycja już 14 maja 2027 w Łodzi. Bądź częścią tej historii.</p>
+    </div>
+    <div class="about-stats">
+      <div class="stat-item">
+        <div class="stat-number">700 tys.</div>
+        <div class="stat-label">Złotych zebranych łącznie</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">1300+</div>
+        <div class="stat-label">Gości na obu edycjach</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">3+</div>
+        <div class="stat-label">Fundacje wsparte dotychczas</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EDITIONS -->
+<div id="editions-root"></div>
+
+<!-- TICKETS -->
+<section id="tickets" class="full-bleed">
+  <div class="ticket-bg"></div>
+  <div class="section-inner" style="text-align:center">
+    <div class="section-tag" style="justify-content:center">
+      <span>Bilety</span>
+    </div>
+    <div class="ticket-ornament"></div>
+    <p class="hero-eyebrow" style="margin-bottom:0">14 maja 2027 · Łódź</p>
+    <div class="ticket-soon">Wkrótce dostępne</div>
+    <p class="ticket-info">Sprzedaż biletów zostanie ogłoszona wkrótce</p>
+    <div class="ticket-notify">
+      <input class="ticket-input" type="email" placeholder="twój@email.pl" id="notify-email" />
+      <button class="ticket-btn" id="notify-btn">Powiadom mnie</button>
+    </div>
+  </div>
+</section>
+
+<!-- PARTNERS -->
+<section id="partners">
+  <div class="section-tag">Partnerzy</div>
+  <h2 class="section-title">Partnerzy <em>i sponsorzy</em></h2>
+  <div class="partners-grid">
+    <div class="partner-slot">logo partnera</div>
+    <div class="partner-slot">logo partnera</div>
+    <div class="partner-slot">logo partnera</div>
+    <div class="partner-slot">logo partnera</div>
+    <div class="partner-slot">logo sponsora</div>
+    <div class="partner-slot">logo sponsora</div>
+    <div class="partner-slot">logo sponsora</div>
+    <div class="partner-slot">logo sponsora</div>
+  </div>
+  <p class="partners-note" style="margin-top:48px">
+    Zostań partnerem III edycji — <a href="#contact">napisz do nas</a>
+  </p>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="full-bleed">
+  <div class="section-inner">
+    <div class="section-tag">Kontakt</div>
+    <h2 class="section-title">Porozmawiajmy<br/><em>o współpracy</em></h2>
+    <div class="contact-grid">
+      <div>
+        <div class="contact-item">
+          <div class="contact-label">E-mail</div>
+          <div class="contact-value">
+            <a href="mailto:kontakt@pomocniwmodzie.pl">kontakt@pomocniwmodzie.pl</a>
+          </div>
+          <div class="contact-desc">Zaproszenia, partnerstwo, media — pisz śmiało.</div>
+        </div>
+        <div class="contact-item" style="margin-top:40px">
+          <div class="contact-label">Obserwuj nas</div>
+          <div class="social-links">
+            <a href="#" class="social-link">Instagram</a>
+            <a href="#" class="social-link">Facebook</a>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="contact-item">
+          <div class="contact-label">Organizator</div>
+          <div class="contact-value">Plesiak</div>
+          <div class="contact-desc">Twórca i pomysłodawca gali poMocni w Modzie. Łączący środowisko modowe z inicjatywami charytatywnymi w Polsce.</div>
+        </div>
+        <div class="contact-item" style="margin-top:40px">
+          <div class="contact-label">Miasto</div>
+          <div class="contact-value">Łódź</div>
+          <div class="contact-desc">Serce polskiej mody i design.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">
+    <img src="uploads/logo-1777359579464.png" alt="poMocni w Modzie" />
+  </div>
+  <div class="footer-copy">© 2027 poMocni w Modzie by Plesiak</div>
+  <div class="footer-tagline">Moda, która zmienia świat</div>
+</footer>
+
+<div class="toast" id="toast">Zapisano! Powiadomimy Cię o biletach.</div>
+
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+
+<script type="text/babel">
+// ── EDITIONS + GALLERY REACT COMPONENT ──────────────────────────────────────
+
+const EDITIONS_DATA = [
+  {
+    id: 'ed2024',
+    year: '2024',
+    edition: 'I Edycja',
+    venue: 'EC1 Łódź',
+    cause: 'Beneficjent: Fun&Drive',
+    description: 'Pierwsza edycja gali, która udowodniła, że moda może być narzędziem realnej zmiany. Spektakularny pokaz na tle industrialnej architektury EC1 zgromadził środowisko łódzkiej mody i biznesu.',
+    raised: '200 tys. zł',
+    designers: '10',
+    guests: '500',
+    photoCount: 12,
+    stripeAngle: 45,
+  },
+  {
+    id: 'ed2025',
+    year: '2025',
+    edition: 'II Edycja',
+    venue: 'Wytwórnia Łódź',
+    cause: 'Fundacja Ukochani · Fundacja Ktoś',
+    description: 'Druga edycja w kultowej Wytwórni przyniosła jeszcze więcej emocji i piękna. Podwójny cel charytatywny — dwie fundacje, dwa razy więcej dobra.',
+    raised: '500 tys. zł',
+    designers: '10',
+    guests: '800',
+    photoCount: 14,
+    stripeAngle: -45,
+  },
+];
+
+function StripedBg({ id, angle, lightness = '0.14' }) {
+  const pid = `stripe-${id}`;
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style={{position:'absolute',inset:0,width:'100%',height:'100%'}}>
+      <defs>
+        <pattern id={pid} patternUnits="userSpaceOnUse" width="20" height="20" patternTransform={`rotate(${angle})`}>
+          <rect width="20" height="20" fill={`oklch(${lightness} 0.01 60)`}/>
+          <rect width="1" height="20" fill={`oklch(${parseFloat(lightness)+0.04} 0.01 60)`}/>
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill={`url(#${pid})`}/>
+    </svg>
+  );
+}
+
+function GalleryModal({ edition, open, onClose }) {
+  const [view, setView] = React.useState('lightbox');
+  const [activeIdx, setActiveIdx] = React.useState(0);
+  const stripRef = React.useRef(null);
+  const isDragging = React.useRef(false);
+  const dragStart = React.useRef(0);
+  const scrollStart = React.useRef(0);
+
+  React.useEffect(() => {
+    if (open) { setActiveIdx(0); setView('lightbox'); }
+  }, [open, edition]);
+
+  React.useEffect(() => {
+    const handler = (e) => { if (e.key === 'Escape') onClose(); };
+    if (open) window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [open, onClose]);
+
+  React.useEffect(() => {
+    if (open) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [open]);
+
+  // Scroll strip to active thumb
+  React.useEffect(() => {
+    if (!stripRef.current || view !== 'lightbox') return;
+    const thumb = stripRef.current.children[activeIdx];
+    if (thumb) {
+      const stripLeft = stripRef.current.getBoundingClientRect().left;
+      const thumbLeft = thumb.getBoundingClientRect().left;
+      stripRef.current.scrollLeft += thumbLeft - stripLeft - 20;
+    }
+  }, [activeIdx, view]);
+
+  // Drag-to-scroll on strip
+  function onStripMouseDown(e) {
+    isDragging.current = true;
+    dragStart.current = e.pageX;
+    scrollStart.current = stripRef.current.scrollLeft;
+  }
+  function onStripMouseMove(e) {
+    if (!isDragging.current) return;
+    stripRef.current.scrollLeft = scrollStart.current - (e.pageX - dragStart.current);
+  }
+  function onStripMouseUp() { isDragging.current = false; }
+
+  if (!edition) return null;
+  const count = edition.photoCount;
+
+  function prev() { setActiveIdx(i => (i - 1 + count) % count); }
+  function next() { setActiveIdx(i => (i + 1) % count); }
+
+  const photos = Array.from({ length: count }, (_, i) => i);
+
+  return (
+    <div
+      className={`gallery-modal-backdrop${open ? ' open' : ''}`}
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+    >
+      {/* HEADER */}
+      <div className="gallery-modal-header">
+        <div className="gallery-modal-title">
+          <div className="gallery-modal-year">{edition.year}</div>
+          <div className="gallery-modal-meta">
+            <div className="gallery-modal-venue">{edition.edition} · {edition.venue}</div>
+            <div className="gallery-modal-cause" dangerouslySetInnerHTML={{__html: edition.cause}}></div>
+          </div>
+        </div>
+        <button className="gallery-close-btn" onClick={onClose}>×</button>
+      </div>
+
+      {/* VIEW TOGGLE */}
+      <div className="gallery-view-toggle">
+        <button className={`view-btn${view === 'lightbox' ? ' active' : ''}`} onClick={() => setView('lightbox')}>Karuzela</button>
+        <button className={`view-btn${view === 'grid' ? ' active' : ''}`} onClick={() => setView('grid')}>Siatka</button>
+      </div>
+
+      {view === 'lightbox' ? (
+        <>
+          {/* STRIP */}
+          <div className="gallery-strip-wrap">
+            <div
+              className="gallery-strip"
+              ref={stripRef}
+              onMouseDown={onStripMouseDown}
+              onMouseMove={onStripMouseMove}
+              onMouseUp={onStripMouseUp}
+              onMouseLeave={onStripMouseUp}
+            >
+              {photos.map(i => (
+                <div
+                  key={i}
+                  className={`strip-thumb${activeIdx === i ? ' active' : ''}`}
+                  onClick={() => setActiveIdx(i)}
+                >
+                  <div className="strip-thumb-inner">
+                    <StripedBg id={`${edition.id}-strip-${i}`} angle={edition.stripeAngle + i * 7} lightness="0.13" />
+                    <div className="strip-thumb-label">{i + 1}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* LIGHTBOX */}
+          <div className="gallery-lightbox">
+            <button className="lightbox-arrow prev" onClick={prev}>‹</button>
+            <div className="lightbox-main">
+              <div className="lightbox-img">
+                <StripedBg id={`${edition.id}-lb-${activeIdx}`} angle={edition.stripeAngle + activeIdx * 13} lightness="0.14" />
+                <div className="lightbox-img-label">zdjęcie {activeIdx + 1} z {edition.year} · {edition.venue}</div>
+              </div>
+              <div className="lightbox-counter">{activeIdx + 1} / {count}</div>
+            </div>
+            <button className="lightbox-arrow next" onClick={next}>›</button>
+          </div>
+        </>
+      ) : (
+        /* GRID */
+        <div className="gallery-grid-view">
+          {photos.map(i => (
+            <div
+              key={i}
+              className="grid-photo"
+              onClick={() => { setView('lightbox'); setActiveIdx(i); }}
+            >
+              <StripedBg id={`${edition.id}-grid-${i}`} angle={edition.stripeAngle + i * 11} lightness="0.13" />
+              <div className="grid-photo-label">{i + 1}</div>
+              <div className="grid-photo-overlay"></div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function EditionsSection() {
+  const [openEdition, setOpenEdition] = React.useState(null);
+
+  return (
+    <section id="editions" style={{padding:0, maxWidth:'none', background:'var(--black-2)'}}>
+      <div className="editions-section">
+        <div className="editions-header">
+          <div className="section-tag">Poprzednie edycje</div>
+          <h2 className="section-title">Historia <em>w kadrach</em></h2>
+        </div>
+
+        <div className="editions-cards">
+          {EDITIONS_DATA.map(ed => (
+            <div key={ed.id} className="ed-card">
+              <div className="ed-cover">
+                <div className="ed-cover-placeholder">
+                  <StripedBg id={`${ed.id}-cover`} angle={ed.stripeAngle} lightness="0.12" />
+                  <div className="ed-cover-label">fotografie z gali {ed.year}<br/>{ed.venue}</div>
+                </div>
+                <div className="ed-cover-overlay"></div>
+                <div className="ed-year-badge">{ed.year}</div>
+              </div>
+              <div className="ed-info">
+                <div className="ed-info-left">
+                  <div className="ed-venue-tag">{ed.edition} · {ed.venue}</div>
+                  <div className="ed-name">poMocni w Modzie</div>
+                  <div className="ed-cause" dangerouslySetInnerHTML={{__html: ed.cause}}></div>
+                  <div className="ed-description">{ed.description}</div>
+                  <div className="ed-stats">
+                    <div className="ed-stat">
+                      <span className="ed-stat-number">{ed.raised}</span>
+                      <span className="ed-stat-label">Zebrano</span>
+                    </div>
+                    <div className="ed-stat">
+                      <span className="ed-stat-number">{ed.designers}</span>
+                      <span className="ed-stat-label">Projektantów</span>
+                    </div>
+                    <div className="ed-stat">
+                      <span className="ed-stat-number">{ed.guests}</span>
+                      <span className="ed-stat-label">Gości</span>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  className="ed-gallery-btn"
+                  onClick={() => setOpenEdition(ed)}
+                >
+                  Galeria →
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <GalleryModal
+        edition={openEdition}
+        open={!!openEdition}
+        onClose={() => setOpenEdition(null)}
+      />
+    </section>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('editions-root')).render(<EditionsSection />);
+</script>
+
+
+
+<script type="text/babel">
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "accentColor": "#a01239",
+  "heroTagline": "Moda, która zmienia świat",
+  "showCountdown": true,
+  "sectionStyle": "elegant"
+}/*EDITMODE-END*/;
+
+function App() {
+  const result = useTweaks(TWEAK_DEFAULTS);
+  const tweaks = result?.tweaks ?? TWEAK_DEFAULTS;
+  const setTweak = result?.setTweak ?? (() => {});
+
+  React.useEffect(() => {
+    // Apply accent color dynamically
+    document.documentElement.style.setProperty('--gold', tweaks.accentColor);
+  }, [tweaks.accentColor]);
+
+  React.useEffect(() => {
+    const el = document.querySelector('.hero-tagline');
+    if (el) el.textContent = tweaks.heroTagline;
+  }, [tweaks.heroTagline]);
+
+  React.useEffect(() => {
+    const el = document.getElementById('countdown');
+    if (el) el.style.display = tweaks.showCountdown ? 'flex' : 'none';
+  }, [tweaks.showCountdown]);
+
+  return (
+    <TweaksPanel title="Tweaks">
+      <TweakSection label="Wizualne">
+        <TweakColor label="Kolor złota" value={tweaks.accentColor} onChange={v => setTweak('accentColor', v)} />
+        <TweakRadio label="Styl sekcji" value={tweaks.sectionStyle}
+          options={[{value:'elegant',label:'Elegancki'},{value:'bold',label:'Odważny'}]}
+          onChange={v => setTweak('sectionStyle', v)} />
+      </TweakSection>
+      <TweakSection label="Treść">
+        <TweakText label="Tagline hero" value={tweaks.heroTagline} onChange={v => setTweak('heroTagline', v)} />
+        <TweakToggle label="Pokaż licznik" value={tweaks.showCountdown} onChange={v => setTweak('showCountdown', v)} />
+      </TweakSection>
+    </TweaksPanel>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('tweaks-root')).render(<App />);
+</script>
+
+<div id="tweaks-root"></div>
+
+<script>
+// COUNTDOWN
+(function() {
+  const target = new Date('2027-05-14T19:00:00');
+  function pad(n) { return String(n).padStart(2, '0'); }
+  function tick() {
+    const now = new Date();
+    let diff = Math.max(0, target - now);
+    const days  = Math.floor(diff / 86400000); diff -= days * 86400000;
+    const hours = Math.floor(diff / 3600000);  diff -= hours * 3600000;
+    const mins  = Math.floor(diff / 60000);    diff -= mins * 60000;
+    const secs  = Math.floor(diff / 1000);
+    document.getElementById('cd-days').textContent  = String(days).padStart(3,'0').replace(/^0+/,'') || '0';
+    document.getElementById('cd-hours').textContent = pad(hours);
+    document.getElementById('cd-mins').textContent  = pad(mins);
+    document.getElementById('cd-secs').textContent  = pad(secs);
+  }
+  tick();
+  setInterval(tick, 1000);
+})();
+
+// NAV scroll
+window.addEventListener('scroll', function() {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// NOTIFY
+document.getElementById('notify-btn').addEventListener('click', function() {
+  const email = document.getElementById('notify-email').value.trim();
+  if (!email || !email.includes('@')) {
+    document.getElementById('notify-email').style.borderColor = 'oklch(0.55 0.15 25)';
+    return;
+  }
+  document.getElementById('notify-email').style.borderColor = '';
+  const toast = document.getElementById('toast');
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3500);
+  document.getElementById('notify-email').value = '';
+});
+
+// Intersection observer for scroll animations on sections
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+document.querySelectorAll('.about-grid, .editions-grid, .contact-grid, .partners-grid, .ticket-notify').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(28px)';
+  el.style.transition = 'opacity 0.9s ease, transform 0.9s ease';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
