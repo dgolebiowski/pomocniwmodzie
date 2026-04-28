@@ -719,6 +719,14 @@
       display: flex; align-items: center; justify-content: center;
       position: relative;
     }
+    .ed-cover-image {
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      transition: transform 0.7s ease;
+    }
+    .ed-card:hover .ed-cover-image { transform: scale(1.04); }
     .ed-cover-placeholder svg {
       position: absolute; inset: 0; width: 100%; height: 100%;
     }
@@ -1029,6 +1037,204 @@
       .gallery-view-toggle { padding: 0 24px 12px; }
     }
 
+    /* DECORATIVE FLOURISHES */
+    .section-glow {
+      position: absolute;
+      pointer-events: none;
+      filter: blur(80px);
+      opacity: 0.35;
+      mix-blend-mode: screen;
+      animation: pulseGlow 8s ease-in-out infinite;
+    }
+    .section-glow.red {
+      background: radial-gradient(circle, #a01239 0%, transparent 70%);
+    }
+    .section-glow.warm {
+      background: radial-gradient(circle, #6e0d27 0%, transparent 70%);
+    }
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.25; transform: scale(1); }
+      50%      { opacity: 0.45; transform: scale(1.1); }
+    }
+    @keyframes pulseGlowSlow {
+      0%, 100% { opacity: 0.18; transform: scale(1) translateY(0); }
+      50%      { opacity: 0.32; transform: scale(1.08) translateY(-20px); }
+    }
+    @keyframes drift {
+      0%, 100% { transform: translateY(0) translateX(0); }
+      50%      { transform: translateY(-30px) translateX(10px); }
+    }
+
+    /* FLOATING EMBERS */
+    .embers {
+      position: absolute; inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .ember {
+      position: absolute;
+      width: 2px; height: 2px;
+      background: #a01239;
+      border-radius: 50%;
+      box-shadow: 0 0 6px 1px #a01239;
+      opacity: 0;
+      animation: emberFloat 12s linear infinite;
+    }
+    @keyframes emberFloat {
+      0%   { opacity: 0; transform: translateY(0) translateX(0); }
+      10%  { opacity: 0.7; }
+      90%  { opacity: 0.5; }
+      100% { opacity: 0; transform: translateY(-100vh) translateX(40px); }
+    }
+
+    /* SECTION DIVIDER */
+    .divider {
+      position: relative;
+      height: 1px;
+      background: linear-gradient(to right, transparent, oklch(0.18 0.02 80) 30%, oklch(0.18 0.02 80) 70%, transparent);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .divider::after {
+      content: '';
+      position: absolute;
+      left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      width: 8px; height: 8px;
+      background: var(--gold);
+      border-radius: 50%;
+      box-shadow: 0 0 16px 3px var(--gold);
+      animation: dividerPulse 3s ease-in-out infinite;
+    }
+    @keyframes dividerPulse {
+      0%, 100% { box-shadow: 0 0 12px 2px var(--gold); transform: translate(-50%, -50%) scale(1); }
+      50%      { box-shadow: 0 0 24px 5px var(--gold); transform: translate(-50%, -50%) scale(1.3); }
+    }
+
+    /* SECTION ATMOSPHERE */
+    section, .editions-section {
+      position: relative;
+    }
+
+    /* About glow */
+    #about::before {
+      content: '';
+      position: absolute;
+      width: 600px; height: 600px;
+      left: -200px; top: 100px;
+      background: radial-gradient(circle, rgba(160,18,57,0.18) 0%, transparent 65%);
+      filter: blur(60px);
+      pointer-events: none;
+      animation: pulseGlowSlow 10s ease-in-out infinite;
+    }
+    #about::after {
+      content: '';
+      position: absolute;
+      width: 400px; height: 400px;
+      right: -100px; bottom: 50px;
+      background: radial-gradient(circle, rgba(160,18,57,0.12) 0%, transparent 60%);
+      filter: blur(80px);
+      pointer-events: none;
+      animation: pulseGlowSlow 14s ease-in-out infinite;
+      animation-delay: -4s;
+    }
+
+    /* Editions glow */
+    #editions-root { position: relative; overflow: hidden; }
+    #editions-root::before {
+      content: '';
+      position: absolute;
+      width: 700px; height: 500px;
+      right: -150px; top: 30%;
+      background: radial-gradient(ellipse, rgba(160,18,57,0.15) 0%, transparent 65%);
+      filter: blur(80px);
+      pointer-events: none;
+      animation: drift 18s ease-in-out infinite;
+    }
+
+    /* Tickets atmosphere */
+    #tickets {
+      overflow: hidden;
+    }
+    #tickets::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 50% 40% at 30% 30%, rgba(160,18,57,0.10), transparent 70%),
+        radial-gradient(ellipse 50% 40% at 70% 70%, rgba(160,18,57,0.08), transparent 70%);
+      animation: pulseGlowSlow 12s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    /* Partners glow */
+    #partners {
+      position: relative;
+      overflow: hidden;
+    }
+    #partners::before {
+      content: '';
+      position: absolute;
+      width: 800px; height: 400px;
+      left: 50%; top: 0;
+      transform: translateX(-50%);
+      background: radial-gradient(ellipse, rgba(160,18,57,0.08) 0%, transparent 60%);
+      filter: blur(60px);
+      pointer-events: none;
+      animation: pulseGlowSlow 16s ease-in-out infinite;
+    }
+
+    /* Contact glow */
+    #contact {
+      position: relative;
+      overflow: hidden;
+    }
+    #contact::before {
+      content: '';
+      position: absolute;
+      width: 500px; height: 500px;
+      right: -150px; top: 100px;
+      background: radial-gradient(circle, rgba(160,18,57,0.14) 0%, transparent 65%);
+      filter: blur(70px);
+      pointer-events: none;
+      animation: drift 20s ease-in-out infinite;
+    }
+
+    /* Vertical accent line */
+    .vline {
+      position: absolute;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, var(--gold-dk) 30%, var(--gold-dk) 70%, transparent);
+      opacity: 0.4;
+      pointer-events: none;
+      animation: vlineGrow 1.5s ease-out forwards;
+      transform-origin: top;
+    }
+    @keyframes vlineGrow {
+      from { transform: scaleY(0); opacity: 0; }
+      to   { transform: scaleY(1); opacity: 0.4; }
+    }
+
+    /* Scroll-reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Subtle stat number animation */
+    .stat-number, .ed-stat-number {
+      transition: color 0.4s;
+    }
+    .stat-item:hover .stat-number,
+    .ed-stat:hover .ed-stat-number {
+      color: var(--gold);
+    }
+
     /* NOTIFY TOAST */
     .toast {
       position: fixed;
@@ -1073,6 +1279,8 @@
   <div class="hero-bg"></div>
   <div class="hero-grain"></div>
   <div class="hero-ornament-top"></div>
+
+  <div class="embers" id="hero-embers"></div>
 
   <div class="hero-content">
     <p class="hero-eyebrow fade-up fade-up-1">Gala Charytatywno-Modowa · Łódź</p>
@@ -1137,8 +1345,12 @@
   </div>
 </section>
 
+<div class="divider"></div>
+
 <!-- EDITIONS -->
 <div id="editions-root"></div>
+
+<div class="divider"></div>
 
 <!-- TICKETS -->
 <section id="tickets" class="full-bleed">
@@ -1242,6 +1454,7 @@ const EDITIONS_DATA = [
     raised: '200 tys. zł',
     designers: '10',
     guests: '500',
+    coverImage: 'uploads/zdjecia-389.jpg',
     photoCount: 12,
     stripeAngle: 45,
   },
@@ -1255,6 +1468,7 @@ const EDITIONS_DATA = [
     raised: '500 tys. zł',
     designers: '10',
     guests: '800',
+    coverImage: 'uploads/czescZielinska-495.jpg',
     photoCount: 14,
     stripeAngle: -45,
   },
@@ -1431,10 +1645,14 @@ function EditionsSection() {
           {EDITIONS_DATA.map(ed => (
             <div key={ed.id} className="ed-card">
               <div className="ed-cover">
-                <div className="ed-cover-placeholder">
-                  <StripedBg id={`${ed.id}-cover`} angle={ed.stripeAngle} lightness="0.12" />
-                  <div className="ed-cover-label">fotografie z gali {ed.year}<br/>{ed.venue}</div>
-                </div>
+                {ed.coverImage ? (
+                  <div className="ed-cover-image" style={{backgroundImage: `url(${ed.coverImage})`}}></div>
+                ) : (
+                  <div className="ed-cover-placeholder">
+                    <StripedBg id={`${ed.id}-cover`} angle={ed.stripeAngle} lightness="0.12" />
+                    <div className="ed-cover-label">fotografie z gali {ed.year}<br/>{ed.venue}</div>
+                  </div>
+                )}
                 <div className="ed-cover-overlay"></div>
                 <div className="ed-year-badge">{ed.year}</div>
               </div>
@@ -1590,6 +1808,50 @@ document.querySelectorAll('.about-grid, .editions-grid, .contact-grid, .partners
   el.style.transition = 'opacity 0.9s ease, transform 0.9s ease';
   observer.observe(el);
 });
+
+// EMBERS — floating particles
+(function spawnEmbers() {
+  const host = document.getElementById('hero-embers');
+  if (!host) return;
+  const COUNT = 18;
+  for (let i = 0; i < COUNT; i++) {
+    const e = document.createElement('div');
+    e.className = 'ember';
+    e.style.left = Math.random() * 100 + '%';
+    e.style.bottom = (-10 - Math.random() * 30) + 'px';
+    e.style.animationDelay = (Math.random() * 12) + 's';
+    e.style.animationDuration = (10 + Math.random() * 8) + 's';
+    e.style.opacity = (0.3 + Math.random() * 0.5);
+    const size = 1 + Math.random() * 2.5;
+    e.style.width = size + 'px';
+    e.style.height = size + 'px';
+    host.appendChild(e);
+  }
+})();
+
+// SCROLL-REVEAL — section titles, stats, partners
+(function setupReveals() {
+  function attach(items) {
+    items.forEach((el, i) => {
+      el.classList.add('reveal');
+      el.style.transitionDelay = (i % 4) * 80 + 'ms';
+    });
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    items.forEach(el => obs.observe(el));
+  }
+  attach(document.querySelectorAll('.section-title, .section-tag, .stat-item, .partner-slot, .contact-item'));
+  // Edition cards mount via React — wait for them
+  setTimeout(() => {
+    attach(document.querySelectorAll('.ed-card'));
+  }, 200);
+})();
 </script>
 </body>
 </html>
