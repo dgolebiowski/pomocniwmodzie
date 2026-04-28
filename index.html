@@ -1458,8 +1458,6 @@ const EDITIONS_DATA = [
     designers: '10',
     guests: '500',
     coverImage: 'uploads/zdjecia-389.jpg',
-    photoCount: 12,
-    stripeAngle: 45,
 	photos: [
       'ed2025/1.jpg',
       'ed2025/2.jpg',
@@ -1467,6 +1465,8 @@ const EDITIONS_DATA = [
 	  'ed2025/4.jpg',
       'ed2025/5.jpg'
     ],
+	photoCount: 5,
+    stripeAngle: 45,
   },
   {
     id: 'ed2026',
@@ -1479,13 +1479,13 @@ const EDITIONS_DATA = [
     designers: '10',
     guests: '800',
     coverImage: 'uploads/czescZielinska-495.jpg',
-    photoCount: 14,
-    stripeAngle: -45,
 	photos: [
       'ed2026/1.jpg',
       'ed2026/2.jpg',
       'ed2026/3.jpg'
     ],
+	photoCount: 3,
+    stripeAngle: -45,
   },
 ];
 
@@ -1604,8 +1604,14 @@ function GalleryModal({ edition, open, onClose }) {
                   onClick={() => setActiveIdx(i)}
                 >
                   <div className="strip-thumb-inner">
-                    <StripedBg id={`${edition.id}-strip-${i}`} angle={edition.stripeAngle + i * 7} lightness="0.13" />
-                    <div className="strip-thumb-label">{i + 1}</div>
+                    {edition.photos && edition.photos[i] ? (
+                      <img src={edition.photos[i]} alt="" style={{width:'100%',height:'100%',objectFit:'cover'}} />
+                    ) : (
+                      <>
+                        <StripedBg id={`${edition.id}-strip-${i}`} angle={edition.stripeAngle + i * 7} lightness="0.13" />
+                        <div className="strip-thumb-label">{i + 1}</div>
+                      </>
+                    )}
                   </div>
                 </div>
               ))}
@@ -1616,9 +1622,15 @@ function GalleryModal({ edition, open, onClose }) {
           <div className="gallery-lightbox">
             <button className="lightbox-arrow prev" onClick={prev}>‹</button>
             <div className="lightbox-main">
-              <div className="lightbox-img">
-                <StripedBg id={`${edition.id}-lb-${activeIdx}`} angle={edition.stripeAngle + activeIdx * 13} lightness="0.14" />
-                <div className="lightbox-img-label">zdjęcie {activeIdx + 1} z {edition.year} · {edition.venue}</div>
+              <div className={`lightbox-img${edition.photos && edition.photos[activeIdx] ? ' has-image' : ''}`}>
+                {edition.photos && edition.photos[activeIdx] ? (
+                  <img src={edition.photos[activeIdx]} alt="" style={{maxWidth:'100%',maxHeight:'70vh',width:'auto',height:'auto',objectFit:'contain'}} />
+                ) : (
+                  <>
+                    <StripedBg id={`${edition.id}-lb-${activeIdx}`} angle={edition.stripeAngle + activeIdx * 13} lightness="0.14" />
+                    <div className="lightbox-img-label">zdjęcie {activeIdx + 1} z {edition.year} · {edition.venue}</div>
+                  </>
+                )}
               </div>
               <div className="lightbox-counter">{activeIdx + 1} / {count}</div>
             </div>
@@ -1634,8 +1646,14 @@ function GalleryModal({ edition, open, onClose }) {
               className="grid-photo"
               onClick={() => { setView('lightbox'); setActiveIdx(i); }}
             >
-              <StripedBg id={`${edition.id}-grid-${i}`} angle={edition.stripeAngle + i * 11} lightness="0.13" />
-              <div className="grid-photo-label">{i + 1}</div>
+              {edition.photos && edition.photos[i] ? (
+                <img src={edition.photos[i]} alt="" style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover'}} />
+              ) : (
+                <>
+                  <StripedBg id={`${edition.id}-grid-${i}`} angle={edition.stripeAngle + i * 11} lightness="0.13" />
+                  <div className="grid-photo-label">{i + 1}</div>
+                </>
+              )}
               <div className="grid-photo-overlay"></div>
             </div>
           ))}
