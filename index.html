@@ -47,7 +47,7 @@
     nav {
       position: fixed;
       top: 0; left: 0; right: 0;
-      z-index: 100;
+      z-index: 110;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -58,6 +58,12 @@
     nav.scrolled {
       background: rgba(10,8,6,0.97);
       border-bottom: 1px solid rgba(180,140,60,0.15);
+    }
+    /* Gdy panel mobilny jest otwarty, nav ma przezroczyste tło - widać tylko logo i X nad panelem */
+    body.menu-open nav,
+    body.menu-open nav.scrolled {
+      background: transparent;
+      border-bottom: none;
     }
     .nav-logo img {
       height: 36px;
@@ -1964,6 +1970,7 @@ window.addEventListener('scroll', function() {
     toggle.classList.toggle('open', open);
     panel.classList.toggle('open', open);
     toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    document.body.classList.toggle('menu-open', open);
     document.body.style.overflow = open ? 'hidden' : '';
   }
   toggle.addEventListener('click', function() {
@@ -1971,6 +1978,14 @@ window.addEventListener('scroll', function() {
   });
   panel.querySelectorAll('[data-mn-link]').forEach(a => {
     a.addEventListener('click', () => setOpen(false));
+  });
+  // Zamknięcie po kliknięciu w tło panelu (poza listą linków)
+  panel.addEventListener('click', function(e) {
+    if (e.target === panel) setOpen(false);
+  });
+  // Zamknięcie klawiszem Escape
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && panel.classList.contains('open')) setOpen(false);
   });
 })();
 
