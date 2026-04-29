@@ -23,7 +23,7 @@
       --gold-lt:  #c4275a;
       --gold-dk:  #6e0d27;
       --white:    oklch(0.97 0.01 85);
-      --muted:    oklch(0.85 0.01 81);
+      --muted:    oklch(0.62 0.02 80);
       --ff-display: 'Cormorant Garamond', Georgia, serif;
       --ff-body:    'Montserrat', Helvetica, sans-serif;
     }
@@ -75,7 +75,7 @@
     }
     nav.scrolled {
       background: rgba(22,18,17,0.95);
-      border-bottom: 1px solid rgba(180,140,60,0.15);
+      border-bottom: 1px solid rgba(160, 18, 57, 0.3);
     }
     /* Gdy panel mobilny jest otwarty, nav ma przezroczyste tło - widać tylko logo i X nad panelem */
     body.menu-open nav,
@@ -688,7 +688,7 @@
     }
     .partners-note {
       margin-top: 40px;
-      font-size: 11px;
+      font-size: 12px;
       color: var(--muted);
       letter-spacing: 0.1em;
     }
@@ -773,14 +773,14 @@
     .footer-logo img { height: 28px; opacity: 0.5; }
     .footer-copy {
       font-size: 10px;
-      color: oklch(0.85 0.01 81);
+      color: var(--muted);
       letter-spacing: 0.1em;
     }
     .footer-tagline {
       font-family: var(--ff-display);
       font-size: 13px;
       font-style: italic;
-      color: oklch(0.85 0.01 81);
+	  color: var(--muted);
     }
 
     /* ANIMATIONS */
@@ -821,8 +821,10 @@
       .countdown-number { font-size: clamp(36px, 11vw, 56px); }
       .countdown-label { font-size: 9px; letter-spacing: 0.2em; }
 
-      /* Editions stats - długie liczby mogą wystawać */
-      .ed-stats { gap: 20px; flex-wrap: wrap; }
+      /* Editions stats */
+      .ed-stats { gap: 16px; }
+      .ed-stats-row { gap: 24px; flex-wrap: wrap; }
+      .ed-stat-hero .ed-stat-number { font-size: 36px; }
       .ed-info { padding: 28px 24px 32px; }
 
       /* Ticket form - input + button mogą się nie zmieścić na wąskim ekranie */
@@ -857,7 +859,14 @@
       overflow: hidden;
       cursor: pointer;
       background: var(--black-3);
-      group: true;
+      transition: transform 0.4s ease;
+    }
+    .ed-card:hover {
+      transform: translateY(-4px);
+    }
+    .ed-card:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 4px;
     }
     .ed-cover {
       aspect-ratio: 4/3;
@@ -937,10 +946,25 @@
     }
     .ed-stats {
       display: flex;
-      gap: 32px;
+      flex-direction: column;
+      gap: 20px;
       margin-top: 20px;
       padding-top: 20px;
       border-top: 1px solid oklch(0.18 0.01 80);
+    }
+    .ed-stat-hero {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .ed-stat-hero .ed-stat-number {
+      font-size: 44px;
+      color: var(--white);
+      letter-spacing: 0.01em;
+    }
+    .ed-stats-row {
+      display: flex;
+      gap: 32px;
     }
     .ed-stat {
       display: flex;
@@ -949,13 +973,13 @@
     }
     .ed-stat-number {
       font-family: var(--ff-display);
-      font-size: 26px;
+      font-size: 32px;
       font-weight: 300;
       color: var(--white);
       line-height: 1;
     }
     .ed-stat-label {
-      font-size: 8px;
+      font-size: 12px;
       letter-spacing: 0.25em;
       text-transform: uppercase;
       color: var(--gold);
@@ -963,19 +987,22 @@
     }
 
     .ed-gallery-btn {
+      display: inline-block;
       background: transparent;
       border: 1px solid var(--gold-dk);
       color: var(--gold);
       font-family: var(--ff-body);
-      font-size: 9px; letter-spacing: 0.25em;
+      font-size: 12px; letter-spacing: 0.25em;
+	  font-weight: 700;
       text-transform: uppercase;
       padding: 12px 20px;
-      cursor: pointer;
       white-space: nowrap;
       transition: background 0.3s, color 0.3s, border-color 0.3s;
       flex-shrink: 0;
+      align-self: flex-start;
+      pointer-events: none;
     }
-    .ed-gallery-btn:hover {
+    .ed-card:hover .ed-gallery-btn {
       background: var(--gold);
       color: var(--black);
       border-color: var(--gold);
@@ -1532,7 +1559,7 @@
     </div>
     <div class="ticket-ornament"></div>
     <p class="hero-eyebrow" style="margin-bottom:0">14 maja 2027 · Łódź</p>
-    <div class="ticket-soon">Bilety wkrótce dostępne</div>
+    <div class="ticket-soon">Wkrótce dostępne</div>
     <p class="ticket-info">Sprzedaż biletów zostanie ogłoszona wkrótce</p>
     <div class="ticket-notify">
       <input class="ticket-input" type="email" placeholder="twój@email.pl" id="notify-email" />
@@ -1603,7 +1630,7 @@
   <div class="footer-logo">
     <img src="uploads/logo-1777359579464.png" alt="poMocni w Modzie" />
   </div>
-  <div class="footer-copy">© 2027 poMocni w Modzie by Plesiak</div>
+  <div class="footer-copy">designed by dgolebiowski © poMocni w Modzie by Plesiak</div>
   <div class="footer-tagline">Moda, która zmienia świat</div>
 </footer>
 
@@ -1673,7 +1700,7 @@ function StripedBg({ id, angle, lightness = '0.14' }) {
 }
 
 function GalleryModal({ edition, open, onClose }) {
-  const [view, setView] = React.useState('lightbox');
+  const [view, setView] = React.useState('grid');
   const [activeIdx, setActiveIdx] = React.useState(0);
   const stripRef = React.useRef(null);
   const isDragging = React.useRef(false);
@@ -1681,7 +1708,7 @@ function GalleryModal({ edition, open, onClose }) {
   const scrollStart = React.useRef(0);
 
   React.useEffect(() => {
-    if (open) { setActiveIdx(0); setView('lightbox'); }
+    if (open) { setActiveIdx(0); setView('grid'); }
   }, [open, edition]);
 
   React.useEffect(() => {
@@ -1730,7 +1757,7 @@ function GalleryModal({ edition, open, onClose }) {
 
   const photos = Array.from({ length: count }, (_, i) => i);
 
-  return (
+  return ReactDOM.createPortal(
     <div
       className={`gallery-modal-backdrop${open ? ' open' : ''}`}
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
@@ -1827,7 +1854,8 @@ function GalleryModal({ edition, open, onClose }) {
           ))}
         </div>
       )}
-    </div>
+    </div>,
+    document.body
   );
 }
 
@@ -1844,7 +1872,14 @@ function EditionsSection() {
 
         <div className="editions-cards">
           {EDITIONS_DATA.map(ed => (
-            <div key={ed.id} className="ed-card">
+            <div
+              key={ed.id}
+              className="ed-card"
+              onClick={() => setOpenEdition(ed)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpenEdition(ed); } }}
+            >
               <div className="ed-cover">
                 {ed.coverImage ? (
                   <div className="ed-cover-image" style={{backgroundImage: `url(${ed.coverImage})`}}></div>
@@ -1860,30 +1895,29 @@ function EditionsSection() {
               <div className="ed-info">
                 <div className="ed-info-left">
                   <div className="ed-venue-tag">{ed.edition} · {ed.venue}</div>
-                  <div className="ed-name">poMocni w Modzie</div>
+                  <div className="ed-name">poMocni w Modzie {ed.year}</div>
                   <div className="ed-cause" dangerouslySetInnerHTML={{__html: ed.cause}}></div>
                   <div className="ed-description">{ed.description}</div>
                   <div className="ed-stats">
-                    <div className="ed-stat">
+                    <div className="ed-stat ed-stat-hero">
                       <span className="ed-stat-number">{ed.raised}</span>
                       <span className="ed-stat-label">Zebrano</span>
                     </div>
-                    <div className="ed-stat">
-                      <span className="ed-stat-number">{ed.designers}</span>
-                      <span className="ed-stat-label">Projektantów</span>
-                    </div>
-                    <div className="ed-stat">
-                      <span className="ed-stat-number">{ed.guests}</span>
-                      <span className="ed-stat-label">Gości</span>
+                    <div className="ed-stats-row">
+                      <div className="ed-stat">
+                        <span className="ed-stat-number">{ed.designers}</span>
+                        <span className="ed-stat-label">Projektantów</span>
+                      </div>
+                      <div className="ed-stat">
+                        <span className="ed-stat-number">{ed.guests}</span>
+                        <span className="ed-stat-label">Gości</span>
+                      </div>
                     </div>
                   </div>
                 </div>
-                <button
-                  className="ed-gallery-btn"
-                  onClick={() => setOpenEdition(ed)}
-                >
+                <div className="ed-gallery-btn" aria-hidden="true">
                   Galeria →
-                </button>
+                </div>
               </div>
             </div>
           ))}
